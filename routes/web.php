@@ -2,7 +2,7 @@
 
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
-
+use App\Http\Controllers\VendorController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -27,9 +27,33 @@ Route::middleware('auth')->group(function () {
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
-Route::get('/admin/dashboard', function () {
-    return 'Welcome Admin';
-})->middleware(['auth', 'admin']);
+
+Route::middleware(['auth', 'admin'])
+    ->prefix('admin')
+    ->name('admin.')
+    ->group(function () {
+
+        Route::get('/dashboard', function () {
+            return 'Welcome Admin';
+        })->name('dashboard');
+
+        Route::get('/vendors', [VendorController::class, 'index'])->name('vendors.index');
+        Route::get('/vendors/create', [VendorController::class, 'create'])->name('vendors.create');
+        Route::post('/vendors', [VendorController::class, 'store'])->name('vendors.store');
+});
+
+Route::middleware(['auth', 'vendor'])
+    ->prefix('vendor')
+    ->name('vendor.')
+    ->group(function () {
+
+        Route::get('/dashboard', function () {
+            return 'Welcome Vendor';
+        })->name('dashboard');
+
+});
+
+
 
 
 require __DIR__.'/auth.php';
