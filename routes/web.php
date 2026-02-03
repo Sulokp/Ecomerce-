@@ -48,7 +48,7 @@ Route::middleware(['auth', 'vendor'])
     ->group(function () {
 
         Route::get('/dashboard', function () {
-            return 'Welcome Vendor';
+            return view('vendor.dashboard');
         })->name('dashboard');
 
 });
