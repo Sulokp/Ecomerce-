@@ -27,14 +27,43 @@ class VendorController extends Controller
         ]);
 
         User::create([
-            'name' => $request->name,
-            'email' => $request->email,
-            'password' => Hash::make($request->password),
-            'role' => 'vendor',
+        'name' => $request->name,
+        'email' => $request->email,
+        'password' => Hash::make($request->password),
+        'role' => 'vendor',
+        'is_active' => false,
         ]);
+
 
         return redirect()
             ->route('admin.vendors.index')
             ->with('success', 'Vendor created successfully');
     }
+        
+        public function approve(User $vendor)
+    {
+        if (!$vendor->isVendor()) {
+            abort(404);
+        }
+
+        $vendor->update([
+            'is_active' => true,
+        ]);
+
+        return back()->with('success', 'Vendor approved successfully.');
+    }
+
+    public function disable(User $vendor)
+    {
+        if (!$vendor->isVendor()) {
+            abort(404);
+        }
+
+        $vendor->update([
+            'is_active' => false,
+        ]);
+
+        return back()->with('success', 'Vendor disabled successfully.');
+    }
+
 }

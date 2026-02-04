@@ -40,7 +40,14 @@ Route::middleware(['auth', 'admin'])
         Route::get('/vendors', [VendorController::class, 'index'])->name('vendors.index');
         Route::get('/vendors/create', [VendorController::class, 'create'])->name('vendors.create');
         Route::post('/vendors', [VendorController::class, 'store'])->name('vendors.store');
+
+        Route::patch('/vendors/{vendor}/approve', [VendorController::class, 'approve'])
+            ->name('vendors.approve');
+
+        Route::patch('/vendors/{vendor}/disable', [VendorController::class, 'disable'])
+            ->name('vendors.disable');
 });
+
 
 Route::middleware(['auth', 'vendor'])
     ->prefix('vendor')
