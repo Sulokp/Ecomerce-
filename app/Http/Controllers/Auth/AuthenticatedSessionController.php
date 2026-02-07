@@ -30,6 +30,14 @@ public function store(LoginRequest $request): RedirectResponse
 
     $user = auth()->user();
 
+    if ($user->role === 'vendor' && !$user->is_active) {
+        Auth::logout();
+        return redirect('/login')->withErrors([
+            'email' => 'Your vendor account is not approved yet.',
+        ]);
+    }
+
+
     if ($user->role === 'admin') {
         return redirect()->route('admin.dashboard');
     }
