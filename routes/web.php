@@ -60,6 +60,18 @@ Route::middleware(['auth', 'vendor'])
 
 });
 
+Route::middleware(['auth'])->group(function () {
+
+    Route::prefix('vendor')
+        ->name('vendor.')
+        ->middleware('role:vendor')
+        ->group(function () {
+
+            Route::resource('products', 
+                \App\Http\Controllers\Vendor\ProductController::class);
+        });
+});
+
 
 
 
