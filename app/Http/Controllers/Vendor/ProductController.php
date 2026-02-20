@@ -7,7 +7,7 @@ use Illuminate\Http\Request;
 use App\Models\Product;
 use App\Models\Category;
 use Illuminate\Support\Facades\Auth;
-
+use Illuminate\Support\Facades\Storage;
 class ProductController extends Controller
 {
     public function index()
@@ -31,15 +31,23 @@ class ProductController extends Controller
             'category_id' => 'required|exists:categories,id',
             'price' => 'required|numeric|min:0',
             'stock' => 'required|integer|min:0',
+            'image' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
         ]);
 
         $vendorProfile = Auth::user()->vendorProfile;
+        $imagePath = null;
+
+        if ($request->hasFile('image')) {
+            $imagePath = $request->file('image')
+                ->store('products', 'public');
+        }
 
         Product::create([
             'vendor_profile_id' => $vendorProfile->id,
             'category_id' => $request->category_id,
             'name' => $request->name,
             'description' => $request->description,
+            'image' => $imagePath,
             'price' => $request->price,
             'stock' => $request->stock,
             'is_active' => true,
